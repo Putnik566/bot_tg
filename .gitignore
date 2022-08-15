@@ -4,7 +4,7 @@ bin-release/
 [Oo]bj/
 [Bb]in/
 ./venv
-./.idea
+/.idea
 # Other files and folders
 .settings/
 
