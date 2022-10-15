@@ -1,26 +1,33 @@
-from aiogram import Bot, Dispatcher, executor, types
-from aiogram.utils.markdown import text, italic, bold
-from aiogram.types import ParseMode
-import emoji
+import json
+from random import randint
 
-TOKEN = '5081083524:AAHgLEg2SCzabY8-H8dp5A9rMi8MEsio4D8'
+str_js = """{
+    "response": {
+        "count": 5961878,
+        "items": [{
+            "first_name": "Елизавета",
+            "id": 620471795,
+            "last_name": "Сопова",
+            "can_access": true
+        }, {
+            "first_name": "Роман",
+            "id": 614752515,
+            "last_name": "Малышев",
+            "can_access": true
+}]
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
-
-
-@dp.message_handler(commands=['start'])
-async def process_start_command(message: types.Message):
-    msg = text(italic(emoji.emojize(':vampire:') + "Hi! Welcome kvest_BOT !!!" + emoji.emojize(':vampire:')))
-    await message.reply(msg, parse_mode=ParseMode.MARKDOWN)
-
-
-@dp.message_handler(commands=['help'])
-async def process_help_command(message: types.Message):
-    msg1 = text(bold(emoji.emojize(':fox:') + "command" + emoji.emojize(':fox:')))
-    await message.reply(msg1, parse_mode=ParseMode.MARKDOWN)
-
-
-if __name__ == "__main__":
-    executor.start_polling(dp)
-
+}
+}"""
+#print(type(str_js))
+data = json.loads(str_js)
+#print(data['response']['count'])
+#print(type(data))
+for item in data['response']['items']:
+    #print(item['first_name'])
+    del item['id']
+    item['likes'] = randint(0, 1000)
+#print(data['response']['items'])
+    s = json.loads(str_js)
+    print(type(s))
+with open("data_1.json", "w") as file:
+    json.dump(data, file)
