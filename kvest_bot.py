@@ -3,17 +3,18 @@ from aiogram.types import ParseMode, InputMediaPhoto, ContentType, Message
 from aiogram.utils.markdown import text, italic, bold
 import emoji
 import json
-Token = "5507190340:AAEv-n7CpB-GSxrQU2p2FE8hDDL1KT0FTKY"
-bot = Bot(token=Token)
+from config_reader import config
+# Для записей с типом Secret* необходимо
+# вызывать метод get_secret_value(),
+# чтобы получить настоящее содержимое вместо '*******'
+bot = Bot(token=config.bot_token.get_secret_value())
 dp = Dispatcher(bot)
-
-# 2) доделать функции( info_about_2_quest) """
 
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await bot.send_message(message.from_user.id,
-                           f"{emoji.emojize(':fox:')}" + "Hi! Добро пожаловать в kvest_BOT" + f"{emoji.emojize(':fox:')}" + "\n"
+                           f"{emoji.emojize(':fox:')}" + f"Hi! Добро пожаловать {text(bold(message.from_user.full_name))} в kvest_BOT" + f"{emoji.emojize(':fox:')}" + "\n"
                            f"{emoji.emojize(':fire:')}" + "Basic command:" + f"{emoji.emojize(':fire:')}" + "\n"
                            f"{emoji.emojize(':collision:')}" + "/start - Launching the bot" + f"{emoji.emojize(':collision:')}" + "\n"
                            f"{emoji.emojize(':collision:')}" + "/help - Output of bot commands info" + f"{emoji.emojize(':collision:')}" + "\n"
@@ -87,5 +88,10 @@ async def otclic_na_nezhdannyye_soobshcheniya(message: types.Message):
 async def photo_handler_proccess(message: Message):
     await message.reply(message.sticker[-1].file_id)
 
+
+@dp.message_handler(content_types=ContentType.NEW_CHAT_MEMBERS)
+async def new_members_process(message: Message):
+    new_members_ = message.new_chat_members[0]
+    await bot.send_message(message.from_user.id, f"Добро пожаловать,{new_members_.mention}")
 if __name__ == "__main__":
     executor.start_polling(dp)
